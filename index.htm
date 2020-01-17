@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1">
+  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<div align = "center"> <h1> Sample Table </h1> </div>
+	</head>
+
+	<style>
+		table  {
+		text-align: left;
+		}
+		th {
+  		text-align: left;
+		}
+
+		.button {
+  		background-color: #3939ac;
+  		border: none;
+  		color: white;
+  		padding: 8px 12px;
+  		text-align: center;
+  		text-decoration: none;
+  		display: inline-block;
+  		font-size: 12px;
+		border-radius: 4px;
+		}
+	</style>
+
+	<body>
+		<div align = "right"> <input type = "button" class = "button" onclick = "CreateTableFromJSON()" value = "Load Data" />
+    		<p id="showData"></p>
+		</div>
+
+		<div class = "container">            
+  		<table class = "table">
+    			<thead>
+      				<tr>
+        			<th>id</th>
+        			<th>name</th>
+        			<th>url</th>
+      				</tr>
+    			</thead>
+    			<tbody id = "outputDiv">
+      
+    			</tbody>
+  		</table>
+		</div>
+
+		
+
+<script>
+
+   /*
+   * This function executes once the "Load Data" button has been clicked.
+   *
+   * Responsible for requesting JSON file from the specified URL and
+   * then calling extractData() which will pull info from the JSON file
+   * and then build a table from it. 
+   */
+   function CreateTableFromJSON() 
+   {
+	// URL to pull JSON file from.
+	let requestURL = 'https://aimtell.com/files/sites.json';
+	let request = new XMLHttpRequest();
+
+	// What to expect from request and send it.
+	request.open('GET', requestURL);
+	request.responseType = 'json';
+	request.send();
+
+	// Once data from URL has loaded, store it and 
+	// then call extractData method
+	request.onload = function() 
+	{
+		const information = request.response;
+		extractData(information);
+	}
+
+	/**
+	* Gets json Obj from the URL request and uses
+	* the obj to reference the different parts of 
+	* the JSON file to add to the table. The tables
+	* parts are put together using the String called 
+	* HTML. The entire table is then built with the
+	* informaition from the JSON file from the url.
+	*/
+	function extractData(jsonObj)
+	{
+		// Border for the table and its headers i.e. id, name, and url.
+		var i, HTML = "<table width = 100%>";
+		
+		// Goes through each of the entries in the JSON file adding
+		// another row and its cells each pass. This loops 3 times.
+		for(i in jsonObj.sites)
+		{
+			// Builds the String using the sites number and which part
+			// of the json file wanted. i.e. id, name, or url...
+			// Adds tags to specify the row/cell
+			HTML += "<tr><td><b>"+jsonObj.sites[i].id+"</b></td>"+
+			"<td>"+jsonObj.sites[i].name+"</td>"+
+			"<td>"+jsonObj.sites[i].url+"</td></tr>";	
+		}
+		
+		// Adds end table tag and builds the table using finished string.
+		HTML += "</table>";
+		document.getElementById("outputDiv").innerHTML = HTML;
+	}
+   }
+
+</script>
+</body>
+</html>
